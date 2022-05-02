@@ -1,0 +1,12 @@
+[package]
+name = "payment-engine"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+csv = "1.1"
+serde = { version = "1", features = ["derive"] }
+rust_decimal = "1.23"
+rust_decimal_macros = "1.23"
