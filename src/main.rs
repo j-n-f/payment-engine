@@ -77,6 +77,15 @@ impl Default for ClientState {
     }
 }
 
+impl ClientState {
+    fn new(client_id: u16) -> Self {
+        ClientState {
+            client_id,
+            ..Default::default()
+        }
+    }
+}
+
 /// Get all the transactions in some readable CSV data and return a map of client account states.
 fn process_csv<R>(mut reader: csv::Reader<R>) -> Result<HashMap<u16, ClientState>, Box<dyn Error>>
 where
@@ -94,12 +103,9 @@ where
         let tx: Transaction = result?;
 
         // All clients referenced by any transaction get tracked.
-        let state: &mut ClientState = client_states.entry(tx.client_id).or_insert_with(|| {
-            let mut empty_state: ClientState = Default::default();
-            empty_state.client_id = tx.client_id;
-
-            empty_state
-        });
+        let state: &mut ClientState = client_states
+            .entry(tx.client_id)
+            .or_insert_with(|| ClientState::new(tx.client_id));
 
         // Transactions only get applied if the client's account isn't locked/frozen.
         if !state.locked {
